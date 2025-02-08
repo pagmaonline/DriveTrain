@@ -113,7 +113,7 @@ public class DriveTrain {
         addToTargetPositions(0,0,0,0);
         setMotorRunModes(DcMotorEx.RunMode.RUN_TO_POSITION);
         //int encoderPulses =  (int) (((distance / wheelCircumferences) * encoderPulsesPeRevolution) * mecanumEfficiencyReciprocal);
-        int encoderPulses =  (int) (((distance / (301.59289474462015089241376479483 / 25.4)) * 384.5) * mecanumEfficiencyReciprocal);
+        int encoderPulses =  (int) (((distance / (301.59289474462015089241376479483 / 25.4)) * 384.5));
         addToTargetPositions(encoderPulses, encoderPulses, encoderPulses, encoderPulses);
         setMotorPowers(Math.abs(power));
     }
