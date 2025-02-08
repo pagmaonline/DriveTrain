@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.ThreadUtil.sleep;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 public class DriveTrain {
     public enum DriveTrainType {
@@ -13,17 +14,17 @@ public class DriveTrain {
         HOLONOMIC_OMNI,
         // KIWI
     }
-    private final DriveTrainType driveTrainType;
+    //private final DriveTrainType driveTrainType;
     private DcMotorEx frontLeft;
     private DcMotorEx frontRight;
     private DcMotorEx backLeft;
     private DcMotorEx backRight;
-    private final double wheelCircumferences;
-    private final double encoderPulsesPeRevolution; // 384.5 PPR at the Output Shaft
-    private final GoBildaPinpointDriver pinpointDriver;
-
-    private PIDController driveController;
-    private PIDController rotationController;
+//    private final double wheelCircumferences;
+//    private final double encoderPulsesPeRevolution; // 384.5 PPR at the Output Shaft
+//    private final GoBildaPinpointDriver pinpointDriver;
+//
+//    private PIDController driveController;
+//    private PIDController rotationController;
 
 
 
@@ -35,63 +36,72 @@ public class DriveTrain {
     // field position
 
 
-    public DriveTrain(DriveTrainType driveTrainType, DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx backLeft, DcMotorEx backRight, double wheelCircumferences, double encoderPulsesPeRevolution, GoBildaPinpointDriver pinpointDriver, PIDController driveController, PIDController rotationController, GoBildaPinpointDriver.EncoderDirection xEncoderDirection, GoBildaPinpointDriver.EncoderDirection yEncoderDirection, GoBildaPinpointDriver.GoBildaOdometryPods encoderResolution, double xEncoderOffset, double yEncoderOffset, boolean keepLastKnownPosition) {
-        this.driveTrainType = driveTrainType;
+    public DriveTrain(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx backLeft, DcMotorEx backRight) {
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.backLeft = backLeft;
         this.backRight = backRight;
-        this.wheelCircumferences = wheelCircumferences;
-        this.encoderPulsesPeRevolution = encoderPulsesPeRevolution;
-        this.pinpointDriver = pinpointDriver;
-        this.driveController = driveController;
-        this.rotationController = rotationController;
-        initOdometry(xEncoderDirection, yEncoderDirection, encoderResolution, xEncoderOffset, yEncoderOffset);
-        if (!keepLastKnownPosition) {
-            resetPosAndIMU();
-        }
+
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    public DriveTrain(DriveTrainType driveTrainType, DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx backLeft, DcMotorEx backRight, double wheelCircumferences, double encoderPulsesPeRevolution, GoBildaPinpointDriver pinpointDriver, PIDController driveController, PIDController rotationController, GoBildaPinpointDriver.EncoderDirection xEncoderDirection, GoBildaPinpointDriver.EncoderDirection yEncoderDirection, double encoderResolution, double xEncoderOffset, double yEncoderOffset, boolean keepLastKnownPosition) {
-        this.driveTrainType = driveTrainType;
-        this.frontLeft = frontLeft;
-        this.frontRight = frontRight;
-        this.backLeft = backLeft;
-        this.backRight = backRight;
-        this.wheelCircumferences = wheelCircumferences;
-        this.encoderPulsesPeRevolution = encoderPulsesPeRevolution;
-        this.pinpointDriver = pinpointDriver;
-        this.driveController = driveController;
-        this.rotationController = rotationController;
-        initOdometry(xEncoderDirection, yEncoderDirection, encoderResolution, xEncoderOffset, yEncoderOffset);
-        if (!keepLastKnownPosition) {
-            resetPosAndIMU();
-        }
-    }
+//    public DriveTrain(DriveTrainType driveTrainType, DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx backLeft, DcMotorEx backRight, double wheelCircumferences, double encoderPulsesPeRevolution, GoBildaPinpointDriver pinpointDriver, PIDController driveController, PIDController rotationController, GoBildaPinpointDriver.EncoderDirection xEncoderDirection, GoBildaPinpointDriver.EncoderDirection yEncoderDirection, GoBildaPinpointDriver.GoBildaOdometryPods encoderResolution, double xEncoderOffset, double yEncoderOffset, boolean keepLastKnownPosition) {
+//        this.driveTrainType = driveTrainType;
+//        this.frontLeft = frontLeft;
+//        this.frontRight = frontRight;
+//        this.backLeft = backLeft;
+//        this.backRight = backRight;
+//        this.wheelCircumferences = wheelCircumferences;
+//        this.encoderPulsesPeRevolution = encoderPulsesPeRevolution;
+//        this.pinpointDriver = pinpointDriver;
+//        this.driveController = driveController;
+//        this.rotationController = rotationController;
+//        initOdometry(xEncoderDirection, yEncoderDirection, encoderResolution, xEncoderOffset, yEncoderOffset);
+//        if (!keepLastKnownPosition) {
+//            resetPosAndIMU();
+//        }
+//    }
+//
+//    public DriveTrain(DriveTrainType driveTrainType, DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx backLeft, DcMotorEx backRight, double wheelCircumferences, double encoderPulsesPeRevolution, GoBildaPinpointDriver pinpointDriver, PIDController driveController, PIDController rotationController, GoBildaPinpointDriver.EncoderDirection xEncoderDirection, GoBildaPinpointDriver.EncoderDirection yEncoderDirection, double encoderResolution, double xEncoderOffset, double yEncoderOffset, boolean keepLastKnownPosition) {
+//        this.driveTrainType = driveTrainType;
+//        this.frontLeft = frontLeft;
+//        this.frontRight = frontRight;
+//        this.backLeft = backLeft;
+//        this.backRight = backRight;
+//        this.wheelCircumferences = wheelCircumferences;
+//        this.encoderPulsesPeRevolution = encoderPulsesPeRevolution;
+//        this.pinpointDriver = pinpointDriver;
+//        this.driveController = driveController;
+//        this.rotationController = rotationController;
+//        initOdometry(xEncoderDirection, yEncoderDirection, encoderResolution, xEncoderOffset, yEncoderOffset);
+//        if (!keepLastKnownPosition) {
+//            resetPosAndIMU();
+//        }
+//    }
 
-    public void initOdometry(GoBildaPinpointDriver.EncoderDirection xEncoderDirection, GoBildaPinpointDriver.EncoderDirection yEncoderDirection, GoBildaPinpointDriver.GoBildaOdometryPods encoderResolution, double xEncoderOffset, double yEncoderOffset) {
-        pinpointDriver.setEncoderDirections(xEncoderDirection, yEncoderDirection);
-        pinpointDriver.setEncoderResolution(encoderResolution);
-        pinpointDriver.setOffsets(xEncoderOffset, yEncoderOffset); // mm
-    }
-
-    public void initOdometry(GoBildaPinpointDriver.EncoderDirection xEncoderDirection, GoBildaPinpointDriver.EncoderDirection yEncoderDirection, double encoderResolution, double xEncoderOffset, double yEncoderOffset) {
-        pinpointDriver.setEncoderDirections(xEncoderDirection, yEncoderDirection);
-        pinpointDriver.setEncoderResolution(encoderResolution);
-        pinpointDriver.setOffsets(xEncoderOffset, yEncoderOffset); // mm
-    }
-
-    public void resetPosAndIMU() {
-        pinpointDriver.resetPosAndIMU(); // takes 0.25 seconds
-        sleep(300);
-    }
-
-
+//    public void initOdometry(GoBildaPinpointDriver.EncoderDirection xEncoderDirection, GoBildaPinpointDriver.EncoderDirection yEncoderDirection, GoBildaPinpointDriver.GoBildaOdometryPods encoderResolution, double xEncoderOffset, double yEncoderOffset) {
+//        pinpointDriver.setEncoderDirections(xEncoderDirection, yEncoderDirection);
+//        pinpointDriver.setEncoderResolution(encoderResolution);
+//        pinpointDriver.setOffsets(xEncoderOffset, yEncoderOffset); // mm
+//    }
+//
+//    public void initOdometry(GoBildaPinpointDriver.EncoderDirection xEncoderDirection, GoBildaPinpointDriver.EncoderDirection yEncoderDirection, double encoderResolution, double xEncoderOffset, double yEncoderOffset) {
+//        pinpointDriver.setEncoderDirections(xEncoderDirection, yEncoderDirection);
+//        pinpointDriver.setEncoderResolution(encoderResolution);
+//        pinpointDriver.setOffsets(xEncoderOffset, yEncoderOffset); // mm
+//    }
+//
+//    public void resetPosAndIMU() {
+//        pinpointDriver.resetPosAndIMU(); // takes 0.25 seconds
+//        sleep(300);
+//    }
 
     // inch / sec
 
     public void driveTo() {
-
     }
 
     public void driveAlong() {
@@ -102,26 +112,27 @@ public class DriveTrain {
     public void tankDrive(double distance, double power) {
         addToTargetPositions(0,0,0,0);
         setMotorRunModes(DcMotorEx.RunMode.RUN_TO_POSITION);
-        int encoderPulses =  (int) (((distance / wheelCircumferences) * encoderPulsesPeRevolution) * mecanumEfficiencyReciprocal);
+        //int encoderPulses =  (int) (((distance / wheelCircumferences) * encoderPulsesPeRevolution) * mecanumEfficiencyReciprocal);
+        int encoderPulses =  (int) (((distance / (301.59289474462015089241376479483 / 25.4)) * 384.5) * mecanumEfficiencyReciprocal);
         addToTargetPositions(encoderPulses, encoderPulses, encoderPulses, encoderPulses);
         setMotorPowers(Math.abs(power));
     }
 
-    public void strafeDrive(double distance, double power) {
-        addToTargetPositions(0,0,0,0);
-        setMotorRunModes(DcMotorEx.RunMode.RUN_TO_POSITION);
-        int encoderPulses =  (int) (((distance / wheelCircumferences) * encoderPulsesPeRevolution) * mecanumEfficiencyReciprocal);
-        addToTargetPositions(encoderPulses, -encoderPulses, encoderPulses, -encoderPulses);
-        setMotorPowers(Math.abs(power));
-    }
-
-    public void driveTheta(double distance, double angle, double power) {
-        addToTargetPositions(0,0,0,0);
-        setMotorRunModes(DcMotorEx.RunMode.RUN_TO_POSITION);
-        int encoderPulses =  (int) (((distance / wheelCircumferences) * encoderPulsesPeRevolution) * mecanumEfficiencyReciprocal);
-        addToTargetPositions(encoderPulses, -encoderPulses, encoderPulses, -encoderPulses);
-        setMotorPowers(Math.abs(power));
-    }
+//    public void strafeDrive(double distance, double power) {
+//        addToTargetPositions(0,0,0,0);
+//        setMotorRunModes(DcMotorEx.RunMode.RUN_TO_POSITION);
+//        int encoderPulses =  (int) (((distance / wheelCircumferences) * encoderPulsesPeRevolution) * mecanumEfficiencyReciprocal);
+//        addToTargetPositions(encoderPulses, -encoderPulses, encoderPulses, -encoderPulses);
+//        setMotorPowers(Math.abs(power));
+//    }
+//
+//    public void driveTheta(double distance, double angle, double power) {
+//        addToTargetPositions(0,0,0,0);
+//        setMotorRunModes(DcMotorEx.RunMode.RUN_TO_POSITION);
+//        int encoderPulses =  (int) (((distance / wheelCircumferences) * encoderPulsesPeRevolution) * mecanumEfficiencyReciprocal);
+//        addToTargetPositions(encoderPulses, -encoderPulses, encoderPulses, -encoderPulses);
+//        setMotorPowers(Math.abs(power));
+//    }
 
     public void turn() {
 
